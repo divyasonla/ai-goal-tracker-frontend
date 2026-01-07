@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Project Examiner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 font-[Manrope]">
+    <div class="min-h-screen flex flex-col">
+        <header class="border-b border-slate-800 bg-gradient-to-r from-slate-900 via-slate-900 to-indigo-900/60 shadow-lg">
+            <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <p class="text-xs uppercase tracking-[0.4em] text-indigo-300">multi-student examiner</p>
+                    <h1 class="text-2xl md:text-3xl font-bold text-white">AI Project Viva Coach</h1>
+                    <p class="text-slate-300 max-w-2xl">Upload your project docs or paste text. The AI behaves like an examiner—asks guiding questions, follows up on weak spots, and tracks confidence without giving away answers.</p>
+                </div>
+                <div class="flex items-center gap-3 text-sm text-slate-300">
+                    <span class="bg-emerald-600/20 text-emerald-200 px-3 py-1 rounded-full border border-emerald-500/40">Live</span>
+                    <span id="sessionBadge" class="px-3 py-1 rounded-full bg-slate-800 border border-slate-700">Session: --</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 max-w-6xl mx-auto px-4 py-8 space-y-8">
+            <section class="grid gap-6 md:grid-cols-2">
+                <div class="panel">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="panel-title">1) Project Intake</h2>
+                        <div class="text-xs text-slate-400">PDF / DOCX / TXT upload or paste</div>
+                    </div>
+
+                    <form id="uploadForm" class="border border-slate-800 rounded-xl p-4 bg-slate-900/60 space-y-3">
+                        <label class="block text-sm text-slate-300 font-semibold">Upload file</label>
+                        <input id="fileInput" type="file" accept=".pdf,.doc,.docx,.txt,.md" class="w-full text-sm text-slate-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-600 file:text-white hover:file:bg-indigo-500" />
+                        <p class="text-xs text-slate-400">Max 10MB. PPT/PPTX not parsed; convert to PDF first.</p>
+                        <button type="submit" class="btn-primary w-full">Analyze Upload</button>
+                    </form>
+
+                    <form id="textForm" class="mt-5 space-y-3">
+                        <label for="projectText" class="block text-sm text-slate-300 font-semibold">Or paste project text</label>
+                        <textarea id="projectText" class="input" rows="6" placeholder="Paste README, abstract, or architecture notes..."></textarea>
+                        <button type="submit" class="btn-secondary w-full">Analyze Pasted Text</button>
+                    </form>
+
+                    <form id="codeForm" class="mt-5 space-y-3 border-t border-slate-700 pt-5">
+                        <label class="block text-sm text-slate-300 font-semibold">📝 Add Code (Optional)</label>
+                        <input id="codeFileInput" type="file" accept=".js,.py,.java,.cpp,.ts,.go,.rb,.php" class="w-full text-sm text-slate-200 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500" />
+                        <p class="text-xs text-slate-400">Upload code file or paste below for code-based questions.</p>
+                        <textarea id="codeText" class="input" rows="5" placeholder="Paste code snippet (Python, JS, Java, etc.)..."></textarea>
+                        <button type="submit" class="btn-secondary w-full">Add Code to Session</button>
+                    </form>
+                </div>
+
+                <div class="panel">
+                    <div class="flex items-center justify-between mb-2">
+                        <h2 class="panel-title">Extracted Project Profile</h2>
+                        <span id="charCount" class="text-xs text-slate-400">--</span>
+                    </div>
+                    <div id="extractedCard" class="space-y-2 text-sm text-slate-200">
+                        <p class="text-slate-400">No project analyzed yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="panel-title">2) Modes & Question Packs</h2>
+                        <p class="text-slate-400 text-sm">Select a tone, then auto-generate examiner-style questions with hints.</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <label class="text-sm text-slate-300">Mode</label>
+                        <select id="modeSelect" class="input min-w-[180px]">
+                            <option value="beginner">Beginner (simple, supportive)</option>
+                            <option value="interview">Interview (strict, concise)</option>
+                            <option value="presentation">Presentation (teacher style)</option>
+                            <option value="surprise">Random surprise</option>
+                        </select>
+                        <button id="generateQuestions" class="btn-primary">Generate Questions</button>
+                    </div>
+                </div>
+                <div id="questionGrid" class="grid gap-3 md:grid-cols-3"></div>
+            </section>
+
+            <section class="grid gap-6 md:grid-cols-3">
+                <div class="panel md:col-span-2">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="panel-title">3) Live Q&A</h2>
+                        <button id="nextQuestion" class="btn-ghost text-xs">Next suggested question</button>
+                    </div>
+                    <div id="conversation" class="h-80 overflow-y-auto space-y-3 bg-slate-900/50 border border-slate-800 rounded-xl p-4"></div>
+                    <div class="mt-4 space-y-2">
+                        <label class="text-sm text-slate-300" for="answerBox">Your answer</label>
+                        <textarea id="answerBox" rows="4" class="input" placeholder="Respond briefly; AI will probe deeper without giving answers."></textarea>
+                        <div class="flex gap-3">
+                            <button id="submitAnswer" class="btn-primary">Send answer & get follow-up</button>
+                            <button id="resetSession" class="btn-ghost">New session</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel h-full">
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="panel-title">4) Confidence & Focus</h2>
+                        <button id="refreshScore" class="btn-secondary text-xs">Score now</button>
+                    </div>
+                    <div id="scoreCard" class="space-y-2 text-sm text-slate-200">
+                        <p class="text-slate-400">Score will appear after some Q&A.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="border-t border-slate-800 py-5 text-center text-slate-500 text-sm">
+            AI Examiner · Session-based · No direct answers
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

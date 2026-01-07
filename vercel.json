@@ -1,9 +1,9 @@
 {
   "version": 2,
-  "builds": [
+  "rewrites": [
     {
-      "src": "next.config.js",
-      "use": "@vercel/next"
+      "source": "/api/:path*",
+      "destination": "https://ai-goal-tracker-backend.onrender.com/:path*"
     }
   ]
 }

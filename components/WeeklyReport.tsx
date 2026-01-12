@@ -263,7 +263,7 @@ function WeeklyReport() {
       </div>
 
       {/* Recommendations */}
-      {report.recommendations && report.recommendations.length > 0 && (
+      {/* {report.recommendations && report.recommendations.length > 0 && (
         <div className="bg-white rounded-2xl shadow-lg p-6">
           <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
             <span className="mr-3">💡</span>
@@ -278,10 +278,10 @@ function WeeklyReport() {
             ))}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Next Week Improvement Plan */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
+      {/* <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl shadow-lg p-6 text-white">
         <h3 className="text-2xl font-bold mb-4 flex items-center">
           <span className="mr-3">🎯</span>
           Next Week Improvement Plan (Auto-Suggestions)
@@ -300,10 +300,10 @@ function WeeklyReport() {
             <p className="text-sm opacity-90">Include mock tests and revision goals</p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Final Remarks */}
-      <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-200">
+      {/* <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-200">
         <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
           <span className="mr-3">📝</span>
           Final Remarks
@@ -316,7 +316,7 @@ function WeeklyReport() {
             ? 'Keep up the great work! With continued consistency and focus, you can achieve even better results next week.' 
             : 'With better consistency, proper planning, and focused effort, your performance can improve significantly next week. Stay motivated!'}
         </p>
-      </div>
+      </div> */}
 
       <div className="flex justify-center">
         <button

@@ -12,14 +12,21 @@ function WeeklyReport() {
   const [loading, setLoading] = useState(true)
   const [username, setUsername] = useState('')
 
+  // Reliable Saturday check using IST weekday string (no parsing)
+  const isSaturdayIST = new Date().toLocaleDateString('en-US', {
+    weekday: 'long',
+    timeZone: 'Asia/Kolkata'
+  }) === 'Saturday'
+
   useEffect(() => {
-    loadReport()
+    // Auto-save on Saturday, otherwise just fetch without saving
+    loadReport(isSaturdayIST)
   }, [])
 
-  const loadReport = async () => {
+  const loadReport = async (save: boolean = false) => {
     try {
       setLoading(true)
-      const data = await goalApi.getWeeklyReport()
+      const data = await goalApi.getWeeklyReport({ save })
       setReport(data)
       
       // Get username from profile
@@ -77,6 +84,19 @@ function WeeklyReport() {
     if (completionRate >= 80) return 'steady progress with excellent consistency'
     if (completionRate >= 60) return 'improving academic progress'
     return 'needs more consistency and better planning'
+  }
+
+  // Render AI insights with bold for Markdown-style headings (**...**)
+  const renderAiInsights = (text: string) => {
+    if (!text) return null
+    const parts = text.split(/(\*\*[^*]+\*\*)/g)
+    return parts.map((part, idx) => {
+      const isBold = part.startsWith('**') && part.endsWith('**')
+      if (isBold) {
+        return <strong key={idx}>{part.slice(2, -2)}</strong>
+      }
+      return <span key={idx}>{part}</span>
+    })
   }
 
   // Compute chart data - hooks must be called before any conditional returns
@@ -258,7 +278,7 @@ function WeeklyReport() {
           AI Feedback & Suggestions
         </h3>
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-6 rounded-r-xl">
-          <p className="text-gray-800 leading-relaxed whitespace-pre-wrap">{report.aiInsights}</p>
+          <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">{renderAiInsights(report.aiInsights)}</div>
         </div>
       </div>
 
@@ -320,8 +340,20 @@ function WeeklyReport() {
 
       <div className="flex justify-center">
         <button
-          onClick={loadReport}
-          className="px-8 py-3 bg-primary-600 text-white text-lg font-semibold rounded-xl hover:bg-primary-700 focus:outline-none focus:ring-4 focus:ring-primary-300 transition-all shadow-lg hover:shadow-xl"
+          onClick={() => {
+            if (!isSaturdayIST) {
+              toast.error('Refresh available only on Saturday')
+              return
+            }
+            loadReport(true)
+          }}
+          disabled={!isSaturdayIST}
+          title={isSaturdayIST ? 'Refresh weekly report' : 'Available to refresh only on Saturday'}
+          className={`px-8 py-3 text-white text-lg font-semibold rounded-xl focus:outline-none focus:ring-4 transition-all shadow-lg ${
+            isSaturdayIST
+              ? 'bg-primary-600 hover:bg-primary-700 focus:ring-primary-300 hover:shadow-xl'
+              : 'bg-gray-300 cursor-not-allowed opacity-60 pointer-events-none'
+          }`}
         >
           🔄 Refresh Report
         </button>

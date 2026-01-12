@@ -113,10 +113,11 @@ export const goalApi = {
     return response.data
   },
 
-  getWeeklyReport: async () => {
-    const cacheKey = 'GET:/weekly-report'
+  getWeeklyReport: async (options?: { save?: boolean }) => {
+    const save = options?.save === true
+    const cacheKey = `GET:/weekly-report?save=${save}`
     return deduplicateRequest(cacheKey, async () => {
-      const response = await api.get<WeeklyReport>('/weekly-report')
+      const response = await api.get<WeeklyReport>('/weekly-report', { params: { save } })
       return response.data
     })
   },

@@ -11,8 +11,8 @@ interface StudentReport {
   weekEnd: string
   totalGoals: number
   completed: number
-  partial: number
-  missed: number
+  partiallyCompleted: number
+  notCompleted: number
   completionRate: number
   performanceStatus: string
   aiFeedback: string
@@ -237,11 +237,11 @@ const AllStudentsReports = () => {
                 </div>
                 <div className="bg-yellow-50 rounded-lg p-3 text-center">
                   <p className="text-xs text-yellow-600 mb-1">Partial</p>
-                  <p className="text-2xl font-bold text-yellow-900">{report.partial}</p>
+                  <p className="text-2xl font-bold text-yellow-900">{report.partiallyCompleted}</p>
                 </div>
                 <div className="bg-red-50 rounded-lg p-3 text-center">
                   <p className="text-xs text-red-600 mb-1">Missed</p>
-                  <p className="text-2xl font-bold text-red-900">{report.missed}</p>
+                  <p className="text-2xl font-bold text-red-900">{report.notCompleted}</p>
                 </div>
                 <div className="bg-primary-50 rounded-lg p-3 text-center">
                   <p className="text-xs text-primary-600 mb-1">Rate</p>

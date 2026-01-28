@@ -204,6 +204,12 @@ function WeeklyReport() {
           </div>
         </div>
 
+        {/* Explanation for Partially Completed */}
+        <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-xl p-4 mb-4">
+          <p className="text-sm text-yellow-800">
+            <strong>Note:</strong> <span className="font-medium">Partially Completed</span> ka matlab hai ki aapne apna goal pura nahi kiya, lekin kuch progress zarur ki hai. Yeh count alag se dikhaya jata hai taki aapko apni improvement aur consistency ka sahi feedback mile. Koshish karein ki agle week apne goals ko <span className="font-semibold text-green-700">completely complete</span> karein!
+          </p>
+        </div>
         {/* Performance Status */}
         <div className={`${performanceStatus.bg} border-2 border-${performanceStatus.color.split('-')[1]}-300 rounded-xl p-6`}>
           <div className="flex items-center justify-between">

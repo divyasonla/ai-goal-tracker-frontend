@@ -13,7 +13,7 @@ function GoalList({ username }: GoalListProps) {
   const [loading, setLoading] = useState(true)
   const [selectedDate, setSelectedDate] = useState('')  // Empty = all goals
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null)
-  const [formState, setFormState] = useState({ status: 'Not Completed', reflection: '', blockers: '', goal: '' })
+  const [formState, setFormState] = useState({ status: 'Not Completed', reflection: '', blockers: '', goal: '', timeEstimate: '' })
 
   useEffect(() => {
     loadGoals()
@@ -39,6 +39,7 @@ function GoalList({ username }: GoalListProps) {
       reflection: goal.reflection || '',
       blockers: goal.blockers || '',
       goal: goal.goal || '',
+      timeEstimate: goal.timeEstimate || '',
     })
   }
 
@@ -49,6 +50,7 @@ function GoalList({ username }: GoalListProps) {
         reflection: formState.reflection,
         blockers: formState.blockers,
         goal: formState.goal,
+        timeEstimate: formState.timeEstimate,
       })
       toast.success('Goal updated successfully!')
       setEditingGoal(null)
@@ -177,6 +179,18 @@ function GoalList({ username }: GoalListProps) {
                     </select>
                   </div>
 
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Time Estimate (hours)
+                    </label>
+                    <input
+                      type="text"
+                      value={formState.timeEstimate || ''}
+                      onChange={(e) => setFormState({ ...formState, timeEstimate: e.target.value })}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      placeholder="e.g., 2 hours"
+                    />
+                  </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       What went well?
